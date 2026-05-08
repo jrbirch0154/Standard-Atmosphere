@@ -7,13 +7,15 @@
 
 import math
 from dataclasses import dataclass
+from scipy import constants
 
 # CONSTANTS
 
 T0 = 288.15  # Sea-level temperature, K
-P0 = 101325.0  # Sea-level pressure, Pa
-g0 = 9.80665  # Standard gravity, m/s²
-R = 287.058  # Specific gas constant for dry air, J/(kg·K)
+P0 = constants.atm  # Sea-level pressure, Pa
+g0 = -constants.g  # Standard gravity, m/s²
+M_air = 0.0289644  # kg/mol
+R = constants.R / M_air  # Specific gas constant for dry air, J/(kg·K)
 
 # Each row: (base altitude m, lapse rate K/m)
 # Lapse rate = 0 → isothermal layer (exponential decay)
@@ -39,7 +41,7 @@ class AtmProps:
 
     @property  # K to C
     def T_C(self):
-        return self.T - 273.15
+        return self.T - constants.zero_Celsius
 
     @property  # rho to slug
     def rho_slug(self):
@@ -144,9 +146,6 @@ def atm(alt: float, alt0=0) -> AtmProps:
         T = T + LAYERS[6] * (alt - 71000)
         P = P * (T / T4) ** (g0 / (LAYERS[6] * R))
         rho = P / (R * T)
-
-    else:
-        raise ValueError(f"Altitude {alt} m is out of range.")
 
     return AtmProps(T, P, rho)
 
