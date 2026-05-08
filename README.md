@@ -48,5 +48,5 @@ print(props.rho_slug)   # Density, slug/ft³
 
 ## Requirements
 
-Python 3.7+ (standard library - `math` and `dataclasses`)
-scipy
+- Python 3.7+
+- Scipy
